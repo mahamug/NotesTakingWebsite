@@ -12,7 +12,7 @@ import {
   DeleteOutlineOutlined as Delete,
   ColorLensOutlined as BackgroundOption,
   AddAlertOutlined as ReminderAlert,
-  AccessTimeOutlined as AccessTime
+  AccessTimeOutlined as AccessTime,
 } from "@mui/icons-material";
 import { DataContext } from "../../context/DataProvider";
 import BackgroundColorModal from "../modal/BackgroundColorModal";
@@ -29,23 +29,29 @@ const StyledCard = styled(Card)`
 `;
 
 const NotesData = ({ note }) => {
-  const { notes, setNotes, setArchiveNotes, setDeletedNotes, editedNote, setEditedNote } =
-    useContext(DataContext);
+  const {
+    notes,
+    setNotes,
+    setArchiveNotes,
+    setDeletedNotes,
+    editedNote,
+    setEditedNote,
+  } = useContext(DataContext);
   const [openModal, setOpenModal] = useState(false);
- const [selectedColor,setSelectedColor] = useState(
-    JSON.parse(localStorage.getItem("notesColor")) || ''
+  const [selectedColor, setSelectedColor] = useState(
+    JSON.parse(localStorage.getItem("notesColor")) || ""
   );
 
   const archiveNote = (note) => {
-    const updatedNotes = notes.filter((data) => data.id !== note.id); //filter return array so set mae directly push
+    const updatedNotes = notes.filter((data) => data.id !== note.id);
     setNotes(updatedNotes);
-    setArchiveNotes((prevArr) => [note, ...prevArr]); // archive to the beginning of the archiveNotes array.
+    setArchiveNotes((prevArr) => [note, ...prevArr]);
   };
 
   const deleteNote = (note) => {
-    const updatedNotes = notes.filter((data) => data.id !== note.id); //filter return array so set mae directly push
+    const updatedNotes = notes.filter((data) => data.id !== note.id);
     setNotes(updatedNotes);
-    setDeletedNotes((prevArr) => [note, ...prevArr]); // archive to the beginning of the archiveNotes array.
+    setDeletedNotes((prevArr) => [note, ...prevArr]);
   };
 
   const handleBackgroundOptionClick = () => {
@@ -56,14 +62,12 @@ const NotesData = ({ note }) => {
     setOpenModal("reminder");
   };
 
-
   const handleColorSelect = (color) => {
     setSelectedColor(color);
     const updatedNotes = notes.map((data) =>
       data.id === note.id ? { ...data, noteColor: color } : data
     );
     setNotes(updatedNotes);
-  
   };
 
   const handleEditOpenModal = () => {
@@ -78,15 +82,12 @@ const NotesData = ({ note }) => {
       );
       return updatedNotes;
     });
-  
-    // Clear the 'editedNote' state
+
     setEditedNote([]);
-    // Pass the updated note data to the EditNoteModal
     setOpenModal({ type: "edit", data: updatedNote });
     setOpenModal(null);
   };
 
-  
   useEffect(() => {
     localStorage.setItem("notesColor", JSON.stringify(selectedColor));
   }, [selectedColor]);
@@ -96,27 +97,31 @@ const NotesData = ({ note }) => {
         <Typography variant="h5" fontWeight="bold">
           {note.heading}
         </Typography>
-        <Typography 
-        style={{
-          whiteSpace: "nowrap", // Prevent text from wrapping
-          overflow: "hidden", // Hide overflow text
-          textOverflow: "ellipsis", // Show ellipsis for overflow
-        }}>{note.text}</Typography>
-        {note.reminderDate && (
-        <div style={{display:"flex",flexDirection:"row"}}>
-        <AccessTime fontSize="small" />
-        <Typography variant="body2" color="textSecondary" style={{margin:2}}>
-          {note.reminderDate}
+        <Typography
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {note.text}
         </Typography>
-      </div>
-      )}
+        {note.reminderDate && (
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <AccessTime fontSize="small" />
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              style={{ margin: 2 }}
+            >
+              {note.reminderDate}
+            </Typography>
+          </div>
+        )}
       </CardContent>
       <CardActions>
-      <Tooltip title="Remind me">
-          <ReminderAlert
-            fontSize="small"
-            onClick={handleReminderModal}
-          />
+        <Tooltip title="Remind me">
+          <ReminderAlert fontSize="small" onClick={handleReminderModal} />
         </Tooltip>
         <Tooltip title="Background Options">
           <BackgroundOption
@@ -128,14 +133,14 @@ const NotesData = ({ note }) => {
           <Archive
             fontSize="small"
             style={{ marginLeft: "auto" }}
-            onClick={() => archiveNote(note)} // konse note pr click
+            onClick={() => archiveNote(note)}
           />
         </Tooltip>
         <Tooltip title="Delete">
           <Delete fontSize="small" onClick={() => deleteNote(note)} />
         </Tooltip>
       </CardActions>
-       
+
       <BackgroundColorModal
         openModal={openModal === "background"}
         setOpenModal={setOpenModal}
@@ -150,8 +155,8 @@ const NotesData = ({ note }) => {
         noteColor={note.noteColor}
       />
       <RemindMeModal
-       openModal={openModal === "reminder"}
-       setOpenModal={setOpenModal}
+        openModal={openModal === "reminder"}
+        setOpenModal={setOpenModal}
         note={note}
       />
     </StyledCard>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Button,
   Dialog,
@@ -9,15 +9,13 @@ import {
 } from "@mui/material";
 import { DataContext } from "../../context/DataProvider";
 
-const EditNoteModal = ({ openModal, onClose, onSave, note, }) => {
-  const { setEditedNote } =
-  useContext(DataContext);
+const EditNoteModal = ({ openModal, onClose, onSave, note }) => {
+  const { setEditedNote } = useContext(DataContext);
   const [addEditedNote, setAddEditedNote] = useState({
     heading: note.heading,
     text: note.text,
   });
   useEffect(() => {
-    // Update the edited note when the 'note' prop changes
     setAddEditedNote({
       heading: note.heading,
       text: note.text,
@@ -30,11 +28,9 @@ const EditNoteModal = ({ openModal, onClose, onSave, note, }) => {
       ...addEditedNote,
       [name]: value,
     });
-   
   };
 
   const handleSave = () => {
-    // Call the 'onSave' function to save the changes
     onSave(addEditedNote);
     setEditedNote((prevArr) => {
       if (Array.isArray(prevArr)) {
@@ -48,10 +44,12 @@ const EditNoteModal = ({ openModal, onClose, onSave, note, }) => {
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md">
       <DialogTitle>Edit Note</DialogTitle>
-      <DialogContent dividers
-       sx={{
-        backgroundColor: note.noteColor,
-      }}>
+      <DialogContent
+        dividers
+        sx={{
+          backgroundColor: note.noteColor,
+        }}
+      >
         <TextField
           label="Heading"
           name="heading"
@@ -84,4 +82,3 @@ const EditNoteModal = ({ openModal, onClose, onSave, note, }) => {
 };
 
 export default EditNoteModal;
-

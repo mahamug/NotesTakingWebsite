@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Box, Grid, } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 //components
 import Form from "./Form";
@@ -9,7 +9,6 @@ import EmptyNotes from "./EmptyNotes";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -63,7 +62,6 @@ const Notes = () => {
                           <NotesData note={note} />
                         </Grid>
                       )}
-                     
                     </Draggable>
                   ))}
                 </Grid>

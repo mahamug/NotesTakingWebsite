@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import io from "socket.io-client";
 
 export const DataContext = createContext(null);
 
@@ -15,7 +16,12 @@ const DataProvider = ({ children }) => {
   const [editedNote, setEditedNote] = useState(
     JSON.parse(localStorage.getItem("editedNote")) || []
   );
-
+  const [notifications, setNotifications] = useState(
+    JSON.parse(localStorage.getItem("notifications")) || []
+  );
+  const [notificationCount, setNotificationCount] = useState(
+    Number(localStorage.getItem("notificationCount")) || 0
+  );
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
@@ -28,6 +34,30 @@ const DataProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem("editedNote", JSON.stringify(editedNote));
   }, [editedNote]);
+  useEffect(() => {
+    localStorage.setItem("notifications", JSON.stringify(notifications));
+  }, [notifications]);
+  useEffect(() => {
+    localStorage.setItem("notificationCount", notificationCount.toString());
+  }, [notificationCount]);
+  useEffect(() => {
+    const socket = io("http://localhost:3001");
+    socket.on("connect", () => {
+      console.log("Connected to server from data provider.");
+    });
+
+    socket.on("notification", ({ message }) => {
+      console.log("Received notification:", message);
+      setNotifications((prevNotifications) => [...prevNotifications, message]);
+      setNotificationCount((prevCount) => prevCount + 1);
+    });
+
+    return () => {
+      socket.disconnect();
+      console.log("Disconnected from server.");
+    };
+  }, []);
+
   return (
     <DataContext.Provider
       value={{
@@ -39,6 +69,10 @@ const DataProvider = ({ children }) => {
         setDeletedNotes,
         editedNote,
         setEditedNote,
+        notifications,
+        setNotifications,
+        notificationCount,
+        setNotificationCount,
       }}
     >
       {children}

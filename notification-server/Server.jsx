@@ -15,25 +15,33 @@ const io = new Server(server, {
 const reminders = [];
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
-  
+
   socket.on("setReminder", ({ note, selectedDate }) => {
-    // Store the reminder in memory
     reminders.push({ socketId: socket.id, note, selectedDate });
-    scheduleReminder(note, selectedDate, socket.id);
+    console.log("Socket ID before calling scheduleReminder:", socket.id);
+    scheduleReminder(note, selectedDate, socket);
   });
-  function scheduleReminder(note, selectedDate, socketId) {
-    // Parse the selectedDate to a Date object
+  function scheduleReminder(note, selectedDate, socket) {
     const reminderDate = new Date(selectedDate);
-  
-    // Schedule a notification using node-schedule
-    schedule.scheduleJob(reminderDate, () => {
-      // Emit a notification event to the specific socket
-      io.to(socketId).emit("notification", { message: "Reminder: " + note });
-      console.log("Notification sent by socket: " + socketId);
-    });
+    const currentTime = new Date();
+
+    console.log("Scheduled Time:", reminderDate);
+    console.log("Current Time:", currentTime);
+
+    if (reminderDate > currentTime) {
+      schedule.scheduleJob(reminderDate, () => {
+        console.log("Emitting notification:", "Reminder:", note);
+        socket.emit("notification", { message: "Reminder: " + note });
+        console.log("Notification sent by socket: " + socket.id);
+      });
+    } else {
+      console.log("Scheduled time is in the past, no job scheduled.");
+    }
   }
 
- 
+  socket.emit("notification", {
+    message: "Reminder: server se emit ho rha client listen nhi kr rha obje ",
+  });
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);
   });

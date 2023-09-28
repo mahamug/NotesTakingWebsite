@@ -31,7 +31,6 @@ const closedMixin = (theme) => ({
 });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -56,7 +55,7 @@ const SwipeDrawer = () => {
   const [open, setOpen] = React.useState(true);
 
   const handleDrawer = () => {
-    setOpen((previousState) => !previousState); //toggle kr rhy taak aik hi functn ne drawer open or close ho
+    setOpen((previousState) => !previousState);
   };
   return (
     <Box sx={{ display: "flex" }}>

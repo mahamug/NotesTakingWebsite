@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Button,
   Dialog,
@@ -12,17 +12,19 @@ import io from "socket.io-client";
 
 const socket = io("http://localhost:3001");
 
-const RemindMeModal = ({openModal, setOpenModal,note}) => {
-  const { notes, setNotes,} =  useContext(DataContext);
-  const [selectedDate, setSelectedDate, ] = useState( JSON.parse(localStorage.getItem("selectedDate")) || "");
+const RemindMeModal = ({ openModal, setOpenModal, note }) => {
+  const { notes, setNotes } = useContext(DataContext);
+  const [selectedDate, setSelectedDate] = useState(
+    JSON.parse(localStorage.getItem("selectedDate")) || ""
+  );
 
   const handleSetReminder = (note) => {
     note.reminderDate = selectedDate;
     const updatedNotes = notes.map((data) =>
-    data.id === note.id ? { ...data, reminderDate: selectedDate} : data
-  );
-   socket.emit("setReminder", { note, selectedDate });
-  setNotes(updatedNotes);
+      data.id === note.id ? { ...data, reminderDate: selectedDate } : data
+    );
+    socket.emit("setReminder", { note, selectedDate });
+    setNotes(updatedNotes);
     setOpenModal(null);
   };
   const handleCloseModal = () => {
@@ -34,27 +36,29 @@ const RemindMeModal = ({openModal, setOpenModal,note}) => {
   }, [selectedDate]);
   return (
     <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md">
-    <DialogTitle>
-    <Typography variant="h5" fontWeight="bold">Select Date and Time</Typography>
-    </DialogTitle>
-    <DialogContent>
-    <input style={{marginLeft:20}}
-        type="datetime-local"
-        value={selectedDate}
-        onChange={(e) => setSelectedDate(e.target.value)}
-      />
+      <DialogTitle>
+        <Typography variant="h5" fontWeight="bold">
+          Select Date and Time
+        </Typography>
+      </DialogTitle>
+      <DialogContent>
+        <input
+          style={{ marginLeft: 20 }}
+          type="datetime-local"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+        />
       </DialogContent>
-    <DialogActions>
-      <Button onClick={handleCloseModal} color="primary">
-        Close
-      </Button>
-      <Button onClick={() => handleSetReminder(note)}
-       color="primary">
+      <DialogActions>
+        <Button onClick={handleCloseModal} color="primary">
+          Close
+        </Button>
+        <Button onClick={() => handleSetReminder(note)} color="primary">
           Save
         </Button>
-    </DialogActions>
-  </Dialog>
-  )
-}
+      </DialogActions>
+    </Dialog>
+  );
+};
 
-export default RemindMeModal
+export default RemindMeModal;

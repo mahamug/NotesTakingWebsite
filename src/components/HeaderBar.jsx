@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import { Menu } from "@mui/icons-material";
-import { AppBar, Toolbar, Typography, IconButton } from "@mui/material/";
+import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
 
 const Header = styled(AppBar)`
   z-index: 1201;
@@ -14,7 +14,7 @@ const Heading = styled(Typography)`
   color: #5f6368;
   font-size: 24px;
   margin-left: 25px;
-`; //material me styling k liye styled ko use krty usko aik varisble me rkhty kis pr style apply krna usko () mae jaisa k yha typo pr style apply horha
+`;
 
 const HeaderBar = ({ handleDrawerOpen, open, AppBar }) => {
   const logo =
@@ -31,10 +31,8 @@ const HeaderBar = ({ handleDrawerOpen, open, AppBar }) => {
         >
           <Menu />
         </IconButton>
-        <img src={logo} alt="img" 
-        style={{ width: 30 }} />
+        <img src={logo} alt="img" style={{ width: 30 }} />
         <Heading>Keep</Heading>
-        {/* heading ki jga typography likha tha usko remove kr k likha */}
       </Toolbar>
     </Header>
   );
